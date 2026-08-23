@@ -20,22 +20,27 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
 $settings = Get-Content $PSScriptRoot\settings.json | ConvertFrom-Json
 
 if (!(Test-Path $settings.PlayedEpisodesPath)) {
+    Write-Host "Creating played episodes file at $($settings.PlayedEpisodesPath)"
     New-Item -ItemType File -Path $settings.PlayedEpisodesPath | Out-Null
 }
-
-$playedEpisodes = Get-Content $settings.PlayedEpisodesPath |
-    ForEach-Object { return $_.Trim() } |
-    Where-Object { $_ -ne "" }
-
 if (!(Test-Path $settings.MediaPath)) {
+    Write-Host "Creating media directory at $($settings.MediaPath)"
     New-Item -ItemType Directory -Path $settings.MediaPath | Out-Null
 }
+
+$playedEpisodes = [System.Collections.Generic.HashSet[string]]::new()
+Get-Content $settings.PlayedEpisodesPath |
+    ForEach-Object { $_.Trim() } |
+    Where-Object { $_ -ne "" } |
+    ForEach-Object { $playedEpisodes.Add($_) | Out-Null }
+
 
 $episodes = [System.Collections.Generic.List[string]]::new()
 Get-ChildItem -Recurse $settings.MediaPath -File |
     where-Object { $settings.SupportedExtensions -contains $_.Extension } |
     Where-Object { $_.FullName -notin $playedEpisodes } |
     ForEach-Object { $episodes.Add($_.FullName) }
+
 
 ################### Functions ###################
 function Get-Episode {
