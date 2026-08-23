@@ -1,6 +1,7 @@
 ################### simple script for shuffleplaying tv episodes ###################
 
-## config and settings and loading episodes and stuff ##
+## config and settings and firstrun stuff ##
+
 if (!(Test-Path $PSScriptRoot\settings.json)) {
     $defaultSettings = @{
         MediaPath = "$PSScriptRoot\Episodes"
@@ -26,8 +27,12 @@ if (!(Test-Path $settings.PlayedEpisodesPath)) {
 if (!(Test-Path $settings.MediaPath)) {
     Write-Host "Creating media directory at $($settings.MediaPath)"
     New-Item -ItemType Directory -Path $settings.MediaPath | Out-Null
+    write-Host "Please add your media files to the media directory and run the script again."
+    exit;
 }
 
+
+## Load media information ##
 $playedEpisodes = [System.Collections.Generic.HashSet[string]]::new()
 Get-Content $settings.PlayedEpisodesPath |
     ForEach-Object { $_.Trim() } |
