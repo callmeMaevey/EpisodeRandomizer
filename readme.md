@@ -1,18 +1,28 @@
-Simple powershell script for playing episodes of tv shows in a random order, without repeating.
+# Episode Randomizer
 
-## how to install:
-    1. install powershell 7
-    2. install VLC, or modify the settings.json file to use your player of choice.
+A simple PowerShell script for playing TV episodes in random order without repeating episodes.
 
-## how to setup:
+## Installation
 
-put episodes in the "episodes" folder
-the folder supports subdirectories, so mulitple shows/seasons/etc can be shuffled without disorganization
+1. Install [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell).
+2. Install [VLC](https://www.videolan.org/vlc/), or edit `settings.json` to use another media player.
 
-In order to restart the shuffle, clear out the "played.txt" file
+## Setup
 
-## how to use:
+Add your episode files to the `Episodes` folder. Subdirectories are supported, so you can organize multiple shows and seasons while shuffling them together.
 
-rightclick "Episode-Randomizer.ps1" and "run in powershell"
-or just call it from your terminal with pwsh ./Episode-Randomizer.ps1
-then follow the prompts.
+To restart the shuffle, clear the `playedEpisodes.txt` file.
+
+## Usage
+
+Run `Episode-Randomizer.ps1` in PowerShell, or start it from a terminal:
+
+```powershell
+pwsh ./Episode-Randomizer.ps1
+```
+
+Follow the prompts to play an episode or exit. When an episode finishes, close the media player and return to the script. The script will then prompt you to play the next episode or exit.
+
+### macOS
+
+On macOS, quit the media player completely instead of simply closing its window. In VLC, use **VLC > Quit** or press **Cmd+Q** so the script can continue.
