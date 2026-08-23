@@ -9,7 +9,7 @@ Simple powershell script for playing episodes of tv shows in a random order, wit
 put episodes in the "episodes" folder
 the folder supports subdirectories, so mulitple shows/seasons/etc can be shuffled without disorganization
 
-In order to restart the shuffle, clear out the "Played.txt" file
+In order to restart the shuffle, clear out the "played.txt" file
 
 ## how to use:
 
