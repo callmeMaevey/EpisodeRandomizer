@@ -16,7 +16,7 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
     }
     $defaultSettings | ConvertTo-Json -Depth 3 | Out-File $PSScriptRoot\settings.json
     Write-Host "Created default settings.json. Please edit it as needed."
-    exit
+    if(read-host "exit to edit the settings file? (y/N)" -eq "y") { exit }
 }
 $settings = Get-Content $PSScriptRoot\settings.json | ConvertFrom-Json
 
@@ -70,5 +70,5 @@ while ($playNext -and $episodes) {
     $episodePath = Get-Episode
     Write-Host "Now playing: $episodePath \nClose the player when finished to continue..."
     Play-Episode $episodePath
-    if (Read-Host "Play next? (Y/N)" -eq "N") { $playNext = $false }
+    if (Read-Host "Play next? (Y/n)" -eq "N") { $playNext = $false }
 }

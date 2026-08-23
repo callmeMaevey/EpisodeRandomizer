@@ -14,5 +14,5 @@ In order to restart the shuffle, clear out the "played.txt" file
 ## how to use:
 
 rightclick "Episode-Randomizer.ps1" and "run in powershell"
-or just call it from your terminal.
+or just call it from your terminal with pwsh ./Episode-Randomizer.ps1
 then follow the prompts.
