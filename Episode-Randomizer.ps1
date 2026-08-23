@@ -43,7 +43,7 @@ Get-Content $settings.PlayedEpisodesPath -ErrorAction Stop |
 $episodes = [System.Collections.Generic.List[string]]::new()
 Get-ChildItem -Recurse $settings.MediaPath -File -ErrorAction Stop |
     Where-Object { $settings.SupportedExtensions -contains $_.Extension } |
-    Where-Object { $_.FullName -notin $playedEpisodes } |
+    Where-Object { -not $playedEpisodes.Contains($_.FullName) } |
     ForEach-Object { $episodes.Add($_.FullName) }
 
 
