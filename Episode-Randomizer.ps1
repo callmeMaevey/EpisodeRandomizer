@@ -18,7 +18,7 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
     Write-Host "Created default settings.json. Please edit it as needed." -ForegroundColor Blue
     if( (Read-Host "exit to edit the settings file? (y/N)") -eq "y") { exit }
 }
-$settings = Get-Content $PSScriptRoot\settings.json | ConvertFrom-Json
+$settings = Get-Content $PSScriptRoot\settings.json -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
 
 if (!(Test-Path $settings.PlayedEpisodesPath)) {
     Write-Host "Creating played episodes file at $($settings.PlayedEpisodesPath)" -ForegroundColor Blue
@@ -34,14 +34,14 @@ if (!(Test-Path $settings.MediaPath)) {
 
 ## Load media information ##
 $playedEpisodes = [System.Collections.Generic.HashSet[string]]::new()
-Get-Content $settings.PlayedEpisodesPath |
+Get-Content $settings.PlayedEpisodesPath -ErrorAction Stop |
     ForEach-Object { $_.Trim() } |
     Where-Object { $_ -ne "" } |
     ForEach-Object { $playedEpisodes.Add($_) | Out-Null }
 
 
 $episodes = [System.Collections.Generic.List[string]]::new()
-Get-ChildItem -Recurse $settings.MediaPath -File |
+Get-ChildItem -Recurse $settings.MediaPath -File -ErrorAction Stop |
     where-Object { $settings.SupportedExtensions -contains $_.Extension } |
     Where-Object { $_.FullName -notin $playedEpisodes } |
     ForEach-Object { $episodes.Add($_.FullName) }
