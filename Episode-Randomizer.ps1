@@ -27,7 +27,7 @@ if (!(Test-Path $settings.PlayedEpisodesPath)) {
 if (!(Test-Path $settings.MediaPath)) {
     Write-Host "Creating media directory at $($settings.MediaPath)"
     New-Item -ItemType Directory -Path $settings.MediaPath | Out-Null
-    write-Host "Please add your media files to the media directory and run the script again."
+    write-Host "add your media files to the media directory!! Then run the script again to start playing!" -ForegroundColor Green
     exit;
 }
 
