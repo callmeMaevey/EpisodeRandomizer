@@ -56,7 +56,13 @@ if ($episodes.Count -eq 0) {
 function Get-Episode {
     $index = Get-Random -Minimum 0 -Maximum $episodes.Count
     $episodePath = $episodes[$index]
-    $episodes.RemoveAt($index)
+
+    #set last fetched episode to the last one, then remove the last.
+    $episodes[$index] = $episodes[$episodes.Count - 1]
+    $episodes.RemoveAt($episodes.Count - 1)
+    #this is for performance reasons, removing the last is o(1)
+    #it seems annoying, but for really large lists its probably worth it.
+
     return $episodePath 
 }
 
