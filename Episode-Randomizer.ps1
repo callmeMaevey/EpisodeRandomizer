@@ -15,19 +15,19 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
         ) 
     }
     $defaultSettings | ConvertTo-Json -Depth 3 | Out-File $PSScriptRoot\settings.json
-    Write-Host "Created default settings.json. Please edit it as needed."
+    Write-Host "Created default settings.json. Please edit it as needed." -ForegroundColor Blue
     if( (read-host "exit to edit the settings file? (y/N)") -eq "y") { exit }
 }
 $settings = Get-Content $PSScriptRoot\settings.json | ConvertFrom-Json
 
 if (!(Test-Path $settings.PlayedEpisodesPath)) {
-    Write-Host "Creating played episodes file at $($settings.PlayedEpisodesPath)"
+    Write-Host "Creating played episodes file at $($settings.PlayedEpisodesPath)" -ForegroundColor Blue
     New-Item -ItemType File -Path $settings.PlayedEpisodesPath | Out-Null
 }
 if (!(Test-Path $settings.MediaPath)) {
-    Write-Host "Creating media directory at $($settings.MediaPath)"
+    Write-Host "Creating media directory at $($settings.MediaPath)..."
     New-Item -ItemType Directory -Path $settings.MediaPath | Out-Null
-    write-Host "add your media files to the media directory!! Then run the script again to start playing!" -ForegroundColor Green
+    Write-Host "`n`nAdd your media files to the media directory!! `nThen run the script again to start playing!" -ForegroundColor Green
     exit;
 }
 
@@ -68,7 +68,7 @@ function Play-Episode ($episodePath) {
 $playNext = $true
 while ($playNext -and $episodes) {
     $episodePath = Get-Episode
-    Write-Host "Now playing: $episodePath \nClose the player when finished to continue..."
+    Write-Host "Now playing: $episodePath `nClose the player when finished to continue..."
     Play-Episode $episodePath
     if ((Read-Host "Play next? (Y/n)") -eq "N") { $playNext = $false }
 }
