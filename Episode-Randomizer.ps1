@@ -62,7 +62,7 @@ function Get-Episode {
 
 function Start-Episode ($episodePath) {
     if ($IsMacOS) {
-        & open -W -a $settings.PlaybackApplication --args $episodePath
+        & open -W -a $settings.PlaybackApplication $episodePath
     }
     else {
         & $settings.PlaybackApplication $episodePath
@@ -72,6 +72,7 @@ function Start-Episode ($episodePath) {
 function Write-PlayedEpisode ($episodePath) {
     try {
         $episodePath | Out-File -Append -FilePath $settings.PlayedEpisodesPath 
+        Write-Host "Marked episode as played: $episodePath" -ForegroundColor Green
     }
     catch {
         Write-Error "Error marking episode as played: $($_.Exception.Message)" -ErrorAction Inquire
