@@ -56,16 +56,21 @@ function Get-Episode {
     $index = Get-Random -Minimum 0 -Maximum $episodes.Count
     $episodePath = $episodes[$index]
     $episodes.RemoveAt($index)
-    $episodePath | Out-File -Append $settings.PlayedEpisodesPath
     return $episodePath 
 }
 
-function Play-Episode ($episodePath) {
+function Start-Episode ($episodePath) {
     if ($IsMacOS) {
         & open -W -a $settings.PlaybackApplication --args $episodePath
+        $errorcode = $?
     }
     else {
         & $settings.PlaybackApplication $episodePath
+        $errorcode = $?
+    }
+    if ($errorcode -eq 0) { $episodePath | Out-File -Append $settings.PlayedEpisodesPath }
+    else{
+        Write-Host "Error playing episode. Please check your playback application settings." -ForegroundColor Red
     }
 }
 
@@ -74,7 +79,7 @@ while ($playNext -and $episodes) {
     $episodePath = Get-Episode
     Write-Host "Now playing: `n`t$episodePath"
     Write-Host "Close the player when finished to continue..."
-    Play-Episode $episodePath
+    Start-Episode $episodePath
     if ($episodes.Count -eq 0) {
         Write-Host "No more unplayed episodes found. Exiting..." -ForegroundColor Yellow
         break
