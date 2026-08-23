@@ -2,7 +2,7 @@
 
 ## config and settings and firstrun stuff ##
 
-if (!(Test-Path $PSScriptRoot\settings.json)) {
+if (!(Test-Path (Join-Path $PSScriptRoot "settings.json"))) {
     $defaultSettings = @{
         MediaPath = (Join-Path $PSScriptRoot "Episodes")
         PlayedEpisodesPath = (Join-Path $PSScriptRoot "playedEpisodes.txt")
@@ -14,11 +14,11 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
             ".dv", ".m2t", ".m1v", ".ogm", ".tod", ".nut", ".pva"
         ) 
     }
-    $defaultSettings | ConvertTo-Json -Depth 3 | Out-File $PSScriptRoot\settings.json
+    $defaultSettings | ConvertTo-Json -Depth 3 | Out-File (Join-Path $PSScriptRoot "settings.json")
     Write-Host "Created default settings.json. Please edit it as needed." -ForegroundColor Blue
     if( (Read-Host "exit to edit the settings file? (y/N)") -eq "y") { exit }
 }
-$settings = Get-Content $PSScriptRoot\settings.json -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+$settings = Get-Content (Join-Path $PSScriptRoot "settings.json") -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
 
 if (!(Test-Path $settings.PlayedEpisodesPath)) {
     Write-Host "Creating played episodes file at $($settings.PlayedEpisodesPath)" -ForegroundColor Blue
