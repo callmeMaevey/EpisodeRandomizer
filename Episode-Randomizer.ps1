@@ -16,7 +16,7 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
     }
     $defaultSettings | ConvertTo-Json -Depth 3 | Out-File $PSScriptRoot\settings.json
     Write-Host "Created default settings.json. Please edit it as needed." -ForegroundColor Blue
-    if( (read-host "exit to edit the settings file? (y/N)") -eq "y") { exit }
+    if( (Read-Host "exit to edit the settings file? (y/N)") -eq "y") { exit }
 }
 $settings = Get-Content $PSScriptRoot\settings.json | ConvertFrom-Json
 
@@ -51,6 +51,7 @@ if ($episodes.Count -eq 0) {
     Write-Host "No unplayed episodes found. Exiting..." -ForegroundColor Yellow
     exit
 }
+
 ################### Functions ###################
 function Get-Episode {
     $index = Get-Random -Minimum 0 -Maximum $episodes.Count
@@ -62,15 +63,18 @@ function Get-Episode {
 function Start-Episode ($episodePath) {
     if ($IsMacOS) {
         & open -W -a $settings.PlaybackApplication --args $episodePath
-        $errorcode = $?
     }
     else {
         & $settings.PlaybackApplication $episodePath
-        $errorcode = $?
     }
-    if ($errorcode -eq 0) { $episodePath | Out-File -Append $settings.PlayedEpisodesPath }
-    else{
-        Write-Host "Error playing episode. Please check your playback application settings." -ForegroundColor Red
+    if (!($?)) { Write-Error "Error playing episode. Please check your playback application." -ea Stop }
+}
+function Write-PlayedEpisode ($episodePath) {
+    try {
+        $episodePath | Out-File -Append -FilePath $settings.PlayedEpisodesPath 
+    }
+    catch {
+        Write-Error "Error marking episode as played: $($_.Exception.Message)" -ea Continue
     }
 }
 
@@ -80,6 +84,7 @@ while ($playNext -and $episodes) {
     Write-Host "Now playing: `n`t$episodePath"
     Write-Host "Close the player when finished to continue..."
     Start-Episode $episodePath
+    Write-PlayedEpisode $episodePath
     if ($episodes.Count -eq 0) {
         Write-Host "No more unplayed episodes found. Exiting..." -ForegroundColor Yellow
         break
