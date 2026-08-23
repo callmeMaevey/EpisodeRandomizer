@@ -6,7 +6,12 @@ if (!(Test-Path $PSScriptRoot\settings.json)) {
         MediaPath = "$PSScriptRoot\Episodes"
         PlayedEpisodesPath = "$PSScriptRoot\playedEpisodes.txt"
         PlaybackApplication = "vlc"
-        ExcludePaths = @("*put_media_here")
+        SupportedExtensions = @( 
+            ".mp4", ".mkv", ".mov", ".avi", ".webm", ".wmv", ".m4v", ".mpg", ".mpeg",
+            ".ts", ".m2ts", ".mts", ".flv", ".3gp", ".vob", ".asf", ".ogv", ".rmvb",
+            ".rm", ".mxf", ".h264", ".hevc", ".h265", ".m2v", ".f4v", ".divx", ".3g2",
+            ".dv", ".m2t", ".m1v", ".ogm", ".tod", ".nut", ".pva"
+        ) 
     }
     $defaultSettings | ConvertTo-Json -Depth 3 | Out-File $PSScriptRoot\settings.json
     Write-Host "Created default settings.json. Please edit it as needed."
@@ -28,7 +33,7 @@ if (!(Test-Path $settings.MediaPath)) {
 
 $episodes = [System.Collections.Generic.List[string]]::new()
 Get-ChildItem -Recurse $settings.MediaPath -File |
-    Where-Object { $_.FullName -notmatch $settings.ExcludePaths } |
+    where-Object { $settings.SupportedExtensions -contains $_.Extension } |
     Where-Object { $_.FullName -notin $playedEpisodes } |
     ForEach-Object { $episodes.Add($_.FullName) }
 

@@ -1,5 +1,0 @@
-{
-    "MediaPath":"$PSScriptRoot\\Episodes",
-    "PlayedEpisodesPath":"$PSScriptRoot\\playedEpisodes.txt",
-    "PlaybackApplication":"vlc"
-}
