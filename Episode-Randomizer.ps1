@@ -42,7 +42,7 @@ Get-Content $settings.PlayedEpisodesPath -ErrorAction Stop |
 
 $episodes = [System.Collections.Generic.List[string]]::new()
 Get-ChildItem -Recurse $settings.MediaPath -File -ErrorAction Stop |
-    where-Object { $settings.SupportedExtensions -contains $_.Extension } |
+    Where-Object { $settings.SupportedExtensions -contains $_.Extension } |
     Where-Object { $_.FullName -notin $playedEpisodes } |
     ForEach-Object { $episodes.Add($_.FullName) }
 
@@ -63,20 +63,15 @@ function Get-Episode {
 function Start-Episode ($episodePath) {
     if ($IsMacOS) {
         & open -W -a $settings.PlaybackApplication $episodePath
-    }
-    else {
+    } else {
         & $settings.PlaybackApplication $episodePath
     }
     if (!($?)) { Write-Error "Error playing episode. Please check your playback application." -ea Stop }
 }
+
 function Write-PlayedEpisode ($episodePath) {
-    try {
-        $episodePath | Out-File -Append -FilePath $settings.PlayedEpisodesPath 
-        Write-Host "Marked episode as played: $episodePath" -ForegroundColor Green
-    }
-    catch {
-        Write-Error "Error marking episode as played: $($_.Exception.Message)" -ErrorAction Inquire
-    }
+    $episodePath | Out-File -Append -FilePath $settings.PlayedEpisodesPath -ErrorAction Stop
+    Write-Host "Marked episode as played: $episodePath" -ForegroundColor Green
 }
 
 
