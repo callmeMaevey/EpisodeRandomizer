@@ -4,8 +4,8 @@
 
 if (!(Test-Path $PSScriptRoot\settings.json)) {
     $defaultSettings = @{
-        MediaPath = "$PSScriptRoot\Episodes"
-        PlayedEpisodesPath = "$PSScriptRoot\playedEpisodes.txt"
+        MediaPath = (Join-Path $PSScriptRoot "Episodes")
+        PlayedEpisodesPath = (Join-Path $PSScriptRoot "playedEpisodes.txt")
         PlaybackApplication = "vlc"
         SupportedExtensions = @( 
             ".mp4", ".mkv", ".mov", ".avi", ".webm", ".wmv", ".m4v", ".mpg", ".mpeg",
