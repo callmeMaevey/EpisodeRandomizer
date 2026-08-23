@@ -74,9 +74,12 @@ function Write-PlayedEpisode ($episodePath) {
         $episodePath | Out-File -Append -FilePath $settings.PlayedEpisodesPath 
     }
     catch {
-        Write-Error "Error marking episode as played: $($_.Exception.Message)" -ea Continue
+        Write-Error "Error marking episode as played: $($_.Exception.Message)" -ErrorAction Inquire
     }
 }
+
+
+## Main ##
 
 $playNext = $true
 while ($playNext -and $episodes) {
