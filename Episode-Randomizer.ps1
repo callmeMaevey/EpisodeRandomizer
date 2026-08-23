@@ -47,6 +47,10 @@ Get-ChildItem -Recurse $settings.MediaPath -File |
     ForEach-Object { $episodes.Add($_.FullName) }
 
 
+if ($episodes.Count -eq 0) {
+    Write-Host "No unplayed episodes found. Exiting..." -ForegroundColor Yellow
+    exit
+}
 ################### Functions ###################
 function Get-Episode {
     $index = Get-Random -Minimum 0 -Maximum $episodes.Count
@@ -68,7 +72,12 @@ function Play-Episode ($episodePath) {
 $playNext = $true
 while ($playNext -and $episodes) {
     $episodePath = Get-Episode
-    Write-Host "Now playing: $episodePath `nClose the player when finished to continue..."
+    Write-Host "Now playing: `n`t$episodePath"
+    Write-Host "Close the player when finished to continue..."
     Play-Episode $episodePath
+    if ($episodes.Count -eq 0) {
+        Write-Host "No more unplayed episodes found. Exiting..." -ForegroundColor Yellow
+        break
+    }
     if ((Read-Host "Play next? (Y/n)") -eq "N") { $playNext = $false }
 }
